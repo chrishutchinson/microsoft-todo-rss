@@ -45,7 +45,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   process.env.NEXTAUTH_URL =
     process.env.NEXTAUTH_URL || `${protocol}://${process.env.VERCEL_URL}`;
 
-  NextAuth(req, res, {
+  return NextAuth(req, res, {
     jwt: {
       signingKey: process.env.TODO_JWT_SIGNING_PRIVATE_KEY,
     },
