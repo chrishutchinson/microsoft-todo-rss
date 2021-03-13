@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import Providers from "next-auth/providers";
+import NextAuthDynamodb from "next-auth-dynamodb";
 
 const MicrosoftProvider = ({
   clientId,
@@ -18,8 +18,7 @@ const MicrosoftProvider = ({
   name: "Microsoft Login",
   type: "oauth",
   version: "2.0",
-  scope:
-    "offline_access https://graph.microsoft.com/user.read https://graph.microsoft.com/tasks.read",
+  scope: process.env.MSAL_SCOPES,
   params: { grant_type: "authorization_code" },
   accessTokenUrl,
   requestTokenUrl,
@@ -43,6 +42,20 @@ export default NextAuth({
   jwt: {
     signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
   },
+  callbacks: {
+    session: async (session, token) => {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: (token as any).sub,
+        },
+      };
+    },
+  },
+  session: {
+    jwt: true,
+  },
   providers: [
     MicrosoftProvider({
       clientId: process.env.MSAL_CLIENT_ID,
@@ -52,4 +65,5 @@ export default NextAuth({
       requestTokenUrl: process.env.MSAL_REQUEST_URL,
     }),
   ],
+  adapter: NextAuthDynamodb,
 });
