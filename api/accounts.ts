@@ -1,6 +1,4 @@
-import { DynamoDB } from "aws-sdk";
-
-const dynamo = new DynamoDB.DocumentClient();
+import { dynamo } from "../utils/dynamo-client";
 
 export const getAccount = async (id: string, provider: "msal") => {
   const account = await dynamo

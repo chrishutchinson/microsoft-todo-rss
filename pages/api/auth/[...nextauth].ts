@@ -40,7 +40,7 @@ const MicrosoftProvider = ({
 
 export default NextAuth({
   jwt: {
-    signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
+    signingKey: process.env.TODO_JWT_SIGNING_PRIVATE_KEY,
   },
   callbacks: {
     session: async (session, token) => {

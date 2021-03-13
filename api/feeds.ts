@@ -1,8 +1,6 @@
-import { DynamoDB } from "aws-sdk";
+import { dynamo } from "../utils/dynamo-client";
 
 export const getFeed = async (id: string) => {
-  const dynamo = new DynamoDB.DocumentClient();
-
   const feed = await dynamo
     .get({
       TableName: "feeds",
@@ -20,8 +18,6 @@ export const getFeed = async (id: string) => {
 };
 
 export const getFeeds = async (userId: string) => {
-  const dynamo = new DynamoDB.DocumentClient();
-
   const feeds = await dynamo
     .query({
       TableName: "feeds",
