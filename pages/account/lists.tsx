@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/client";
 import useSWR from "swr";
+import { RequireAuth } from "../../components/RequireAuth/RequireAuth";
 
 import config from "../../utils/config";
 
@@ -9,17 +10,8 @@ const fetcher = async (input: RequestInfo, init: RequestInit) => {
 };
 
 const Lists: React.FC = () => {
-  const [session, loadingSession] = useSession();
   const { data: feedsData, error: feedsError } = useSWR("/api/feeds", fetcher);
   const { data: listsData, error: listsError } = useSWR("/api/lists", fetcher);
-
-  if (loadingSession) {
-    return null;
-  }
-
-  if (!session) {
-    return <div>Not logged in!</div>;
-  }
 
   if (!feedsData || !listsData) {
     return <div>Loading...</div>;
@@ -54,4 +46,10 @@ const Lists: React.FC = () => {
   );
 };
 
-export default Lists;
+const ListsWithAuth = () => (
+  <RequireAuth>
+    <Lists />
+  </RequireAuth>
+);
+
+export default ListsWithAuth;
