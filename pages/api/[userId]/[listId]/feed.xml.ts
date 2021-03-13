@@ -1,5 +1,5 @@
 import { NextApiHandler } from "next";
-import { createMicrosoftGraphClient } from "../../../../api/microsoft-graph";
+import { createMicrosoftGraphClient } from "../../../../utils/api/microsoft-graph";
 import config from "../../../../utils/config";
 
 const Handler: NextApiHandler = async (request, response) => {

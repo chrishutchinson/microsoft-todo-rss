@@ -1,3 +1,4 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import NextAuth from "next-auth";
 import NextAuthDynamodb from "next-auth-dynamodb";
 
@@ -38,32 +39,39 @@ const MicrosoftProvider = ({
   clientSecret,
 });
 
-export default NextAuth({
-  jwt: {
-    signingKey: process.env.TODO_JWT_SIGNING_PRIVATE_KEY,
-  },
-  callbacks: {
-    session: async (session, token) => {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: (token as any).sub,
-        },
-      };
+export default (req: NextApiRequest, res: NextApiResponse) => {
+  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+
+  process.env.NEXTAUTH_URL =
+    process.env.NEXTAUTH_URL || `${protocol}://${process.env.VERCEL_URL}`;
+
+  NextAuth(req, res, {
+    jwt: {
+      signingKey: process.env.TODO_JWT_SIGNING_PRIVATE_KEY,
     },
-  },
-  session: {
-    jwt: true,
-  },
-  providers: [
-    MicrosoftProvider({
-      clientId: process.env.MSAL_CLIENT_ID,
-      clientSecret: process.env.MSAL_CLIENT_SECRET,
-      accessTokenUrl: process.env.MSAL_ACCESS_URL,
-      authorizationUrl: process.env.MSAL_AUTHORIZATION_URL,
-      requestTokenUrl: process.env.MSAL_REQUEST_URL,
-    }),
-  ],
-  adapter: NextAuthDynamodb,
-});
+    callbacks: {
+      session: async (session, token) => {
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            id: (token as any).sub,
+          },
+        };
+      },
+    },
+    session: {
+      jwt: true,
+    },
+    providers: [
+      MicrosoftProvider({
+        clientId: process.env.MSAL_CLIENT_ID,
+        clientSecret: process.env.MSAL_CLIENT_SECRET,
+        accessTokenUrl: process.env.MSAL_ACCESS_URL,
+        authorizationUrl: process.env.MSAL_AUTHORIZATION_URL,
+        requestTokenUrl: process.env.MSAL_REQUEST_URL,
+      }),
+    ],
+    adapter: NextAuthDynamodb,
+  });
+};

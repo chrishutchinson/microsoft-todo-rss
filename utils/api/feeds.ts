@@ -1,4 +1,4 @@
-import { dynamo } from "../utils/dynamo-client";
+import { dynamo } from "../dynamo-client";
 
 export const getFeed = async (id: string) => {
   const feed = await dynamo

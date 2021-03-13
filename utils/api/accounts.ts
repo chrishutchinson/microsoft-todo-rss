@@ -1,4 +1,4 @@
-import { dynamo } from "../utils/dynamo-client";
+import { dynamo } from "../dynamo-client";
 
 export const getAccount = async (id: string, provider: "msal") => {
   const account = await dynamo

@@ -1,7 +1,7 @@
 import { NextApiHandler } from "next";
 import { getSession } from "next-auth/client";
 
-import { createMicrosoftGraphClient } from "../../api/microsoft-graph";
+import { createMicrosoftGraphClient } from "../../utils/api/microsoft-graph";
 import { requireAuth } from "../../utils/require-auth";
 
 const Handler: NextApiHandler = async (request, response) => {
