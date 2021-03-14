@@ -12,4 +12,8 @@ type MicrosoftTodoTask = {
   isReminderOn: boolean;
   status: string;
   title: string;
+  completedDateTime?: {
+    dateTime: string;
+    timeZone: string;
+  };
 };
