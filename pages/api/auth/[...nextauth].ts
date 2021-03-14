@@ -26,7 +26,6 @@ const MicrosoftProvider = ({
   authorizationUrl,
   profileUrl: "https://graph.microsoft.com/v1.0/me/",
   profile: (profile) => {
-    console.log(profile);
     return {
       id: profile.id,
       name: profile.displayName,

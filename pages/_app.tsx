@@ -8,8 +8,11 @@ import { Header } from "../components/Header/Header";
 import { HeadTitle } from "../components/HeadTitle/HeadTitle";
 
 import theme from "../theme";
+import { usePanelbear } from "../utils/panelbear";
 
 const App: React.FC<AppProps> = ({ Component, pageProps }) => {
+  usePanelbear("2cZkMLIp36t");
+
   return (
     <Provider session={pageProps.session}>
       <ThemeProvider theme={theme}>
