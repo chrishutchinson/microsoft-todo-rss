@@ -1,4 +1,5 @@
 import { Box, Container, Flex, Heading, Text } from "theme-ui";
+import config from "../../utils/config";
 
 export const Footer = () => {
   return (
@@ -12,7 +13,7 @@ export const Footer = () => {
         }}
       >
         <Text as="h2" variant="heading5">
-          To Do RSS
+          {config.appTitle}
         </Text>
         <Text
           as="p"

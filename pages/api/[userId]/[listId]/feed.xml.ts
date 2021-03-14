@@ -20,6 +20,7 @@ const Handler: NextApiHandler = async (request, response) => {
 
   response.statusCode = 200;
   response.setHeader("Content-Type", "application/rss+xml");
+
   response.send(`<?xml version="1.0" ?>
   <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
@@ -30,7 +31,7 @@ const Handler: NextApiHandler = async (request, response) => {
     } – Microsoft To Do RSS feed generator</description>
     <atom:link href="${
       config.baseDomain
-    }/api/journal/feed.xml" rel="self" type="application/rss+xml" />
+    }/api/${listId}/feed.xml" rel="self" type="application/rss+xml" />
     ${tasks
       .map((task) => {
         return `<item>
