@@ -9,6 +9,23 @@ const getHeadingStyle = (fontSize: number | number[]) => ({
 });
 
 const theme: Theme = {
+  colors: {
+    text: "#4D4847",
+    background: "#F4FFF8",
+    primary: "#000F08",
+    secondary: "#1C3738",
+    highlight: "#8BAAAD",
+    buff: "#fff",
+    alert: "#FEDCD8",
+    modes: {
+      dark: {
+        text: "#F4FFF8",
+        background: "#000F08",
+        primary: "#F4FFF8",
+        buff: "#333",
+      },
+    },
+  },
   fonts: {
     body: "system-ui, sans-serif",
     heading: '"Cormorant Garamond", sans-serif',
@@ -36,7 +53,19 @@ const theme: Theme = {
       maxWidth: 800,
       paddingLeft: 3,
       paddingRight: 3,
+    },
+    centered: {
       textAlign: "center",
+    },
+  },
+  buttons: {
+    buttonAction: {
+      variant: "links.buttonAction",
+      cursor: "pointer",
+    },
+    buttonDanger: {
+      variant: "links.buttonDanger",
+      cursor: "pointer",
     },
   },
   links: {
@@ -49,9 +78,50 @@ const theme: Theme = {
       textDecoration: "none",
       borderRadius: 5,
       fontFamily: "body",
+      border: "2px solid",
+      borderColor: "primary",
+      ":hover": {
+        borderColor: "secondary",
+        backgroundColor: "secondary",
+      },
+    },
+    buttonAction: {
+      variant: "links.button",
+      backgroundColor: "primary",
+      color: "background",
       ":hover": {
         backgroundColor: "secondary",
       },
+    },
+    buttonDanger: {
+      variant: "links.button",
+      backgroundColor: "alert",
+      color: "text",
+      ":hover": {
+        backgroundColor: "buff",
+      },
+    },
+    secondaryButton: {
+      variant: "links.button",
+      background: "transparent",
+      color: "text",
+      ":hover": {
+        backgroundColor: "transparent",
+        borderColor: "text",
+      },
+    },
+  },
+  messages: {
+    error: {
+      backgroundColor: "alert",
+    },
+  },
+  cards: {
+    primary: {
+      backgroundColor: "buff",
+      padding: 4,
+      borderRadius: 8,
+      boxShadow: "0 0 4px rgba(0, 0, 0, 0.125)",
     },
   },
   text: {
@@ -67,20 +137,6 @@ const theme: Theme = {
     heading4: getHeadingStyle([3, 4]),
     heading5: getHeadingStyle([2, 3]),
     heading6: getHeadingStyle(2),
-  },
-  colors: {
-    text: "#4D4847",
-    background: "#F4FFF8",
-    primary: "#000F08",
-    secondary: "#1C3738",
-    highlight: "#8BAAAD",
-    modes: {
-      dark: {
-        text: "#F4FFF8",
-        background: "#000F08",
-        primary: "#F4FFF8",
-      },
-    },
   },
   styles: {
     root: {

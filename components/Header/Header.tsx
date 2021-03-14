@@ -1,5 +1,8 @@
 import { useSession } from "next-auth/client";
-import { Box, Container, Flex, Link, Text } from "theme-ui";
+import { Box, Button, Container, Flex, Link, Text } from "theme-ui";
+import NextLink from "next/link";
+
+import config from "../../utils/config";
 
 export const Header = () => {
   const [session, loading] = useSession();
@@ -21,7 +24,9 @@ export const Header = () => {
           }}
         >
           <Text as="h1" variant="heading1">
-            To Do RSS
+            <NextLink href="/">
+              <Link href="/">{config.appTitle}</Link>
+            </NextLink>
           </Text>
           <Text as="p">
             Create RSS feeds from your{" "}
@@ -36,17 +41,30 @@ export const Header = () => {
           <Flex
             sx={{
               alignItems: "center",
+              "> a": {
+                marginRight: 1,
+              },
+              "> a:last-of-type": {
+                marginRight: 0,
+              },
             }}
           >
             {session ? (
               <>
-                <Link href="/account/lists" variant="button">
-                  Account
-                </Link>
+                <NextLink href="/account/lists">
+                  <Link href="/account/lists" variant="button">
+                    Account
+                  </Link>
+                </NextLink>
+                <NextLink href="/logout">
+                  <Link href="/logout" variant="secondaryButton">
+                    Logout
+                  </Link>
+                </NextLink>
               </>
             ) : (
               <>
-                <Link href="/login" variant="button">
+                <Link href="/account/lists" variant="button">
                   Login
                 </Link>
               </>

@@ -1,3 +1,4 @@
 export default {
-  baseDomain: "https://todo.hutch.tf",
+  appTitle: "To Do × RSS",
+  baseDomain: process.env.NEXT_PUBLIC_APP_URL,
 };
