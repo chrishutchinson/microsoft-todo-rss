@@ -10,7 +10,7 @@ export const getFeed = async (id: string, userId: string) => {
     })
     .promise();
 
-  if (!feed) {
+  if (!feed || !feed.Item) {
     throw new Error("No feed found matching that feed ID");
   }
 
@@ -40,9 +40,20 @@ export const addFeed = async (id: string, userId: string) => {
     if (!feed) {
       throw new Error("Unable to add feed");
     }
-
-    return feed.Attributes;
   }
+};
+
+export const deleteFeed = async (id: string, userId: string) => {
+  const existingFeed = await getFeed(id, userId);
+
+  await dynamo
+    .delete({
+      TableName: "feeds",
+      Key: {
+        id: existingFeed.id,
+      },
+    })
+    .promise();
 };
 
 export const getFeeds = async (userId: string) => {

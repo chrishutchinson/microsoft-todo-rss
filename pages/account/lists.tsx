@@ -1,5 +1,4 @@
-import Head from "next/head";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import useSWR from "swr";
 import {
   Box,
@@ -22,8 +21,26 @@ const fetcher = async (input: RequestInfo, init: RequestInit) => {
   return res.json();
 };
 
+const buildFeedUrl = (
+  feed: { id: string; userId: string },
+  options?: {
+    relative?: boolean;
+  }
+) => {
+  return `${options?.relative ? "" : config.baseDomain}/api/${feed.userId}/${
+    feed.id
+  }/feed.xml`;
+};
+
 const List: React.FC<{ list: any; feed?: any }> = ({ list, feed }) => {
+  const [storedFeed, setStoredFeed] = useState(feed);
+  const [isCopied, setIsCopied] = useState(false);
+  const [status, setStatus] = useState<
+    "none" | "pending" | "error" | "success"
+  >("none");
+
   const handleEnableFeed = useCallback(async () => {
+    setStatus("pending");
     const res = await fetch("/api/feed", {
       method: "post",
       headers: {
@@ -35,9 +52,46 @@ const List: React.FC<{ list: any; feed?: any }> = ({ list, feed }) => {
     });
 
     if (!res.ok) {
-      throw new Error(res.statusText);
+      setStatus("error");
+      return;
     }
+
+    const feed = await res.json();
+
+    setStoredFeed(feed);
+    setStatus("success");
   }, []);
+
+  const handleDisableFeed = useCallback(async () => {
+    setStatus("pending");
+    setIsCopied(false);
+    const res = await fetch(`/api/feed?listId=${list.id}`, {
+      method: "delete",
+    });
+
+    if (!res.ok) {
+      setStatus("error");
+      return;
+    }
+
+    setStoredFeed(undefined);
+    setStatus("success");
+  }, []);
+
+  const handleCopyFeedUrl = useCallback(
+    async (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+
+      await navigator.clipboard.writeText(
+        buildFeedUrl(storedFeed, {
+          relative: false,
+        })
+      );
+
+      setIsCopied(true);
+    },
+    [storedFeed]
+  );
 
   return (
     <Box
@@ -56,6 +110,8 @@ const List: React.FC<{ list: any; feed?: any }> = ({ list, feed }) => {
           <Box
             sx={{
               marginBottom: [3, 0],
+              flexGrow: 1,
+              maxWidth: 400,
             }}
           >
             <Box
@@ -68,12 +124,35 @@ const List: React.FC<{ list: any; feed?: any }> = ({ list, feed }) => {
               </Text>
             </Box>
 
-            {feed && (
-              <Input
-                type="text"
-                disabled
-                value={`${config.baseDomain}/api/${feed.userId}/${feed.id}/feed.xml`}
-              />
+            {storedFeed && (
+              <Flex
+                sx={{
+                  flexDirection: "row",
+                  alignItems: "flex-start",
+                }}
+              >
+                <Input
+                  sx={{
+                    marginRight: 1,
+                  }}
+                  type="text"
+                  disabled
+                  value={buildFeedUrl(storedFeed, {
+                    relative: false,
+                  })}
+                />
+                <Link
+                  href={buildFeedUrl(storedFeed)}
+                  onClick={handleCopyFeedUrl}
+                  variant="button"
+                  sx={{
+                    width: 110,
+                    textAlign: "center",
+                  }}
+                >
+                  {isCopied ? "Copied!" : "Copy"}
+                </Link>
+              </Flex>
             )}
           </Box>
 
@@ -88,25 +167,16 @@ const List: React.FC<{ list: any; feed?: any }> = ({ list, feed }) => {
               },
             }}
           >
-            {feed ? (
+            {storedFeed ? (
               <>
-                <Link
-                  href={`/api/${feed.userId}/${feed.id}/feed.xml`}
-                  variant="button"
-                >
-                  View feed
-                </Link>
-                <Link
-                  href={`/api/${feed.userId}/${feed.id}/feed.xml`}
-                  variant="buttonDanger"
-                >
-                  Disable feed
-                </Link>
+                <Button onClick={handleDisableFeed} variant="buttonDanger">
+                  {status === "pending" ? "Deactivating..." : "Deactivate feed"}
+                </Button>
               </>
             ) : (
               <>
                 <Button onClick={handleEnableFeed} variant="buttonAction">
-                  Enable feed
+                  {status === "pending" ? "Activating..." : "Activate feed"}
                 </Button>
               </>
             )}

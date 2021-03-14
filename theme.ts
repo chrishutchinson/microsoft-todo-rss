@@ -60,12 +60,12 @@ const theme: Theme = {
   },
   buttons: {
     buttonAction: {
-      variant: "links.button",
-      backgroundColor: "primary",
-      color: "background",
-      ":hover": {
-        backgroundColor: "secondary",
-      },
+      variant: "links.buttonAction",
+      cursor: "pointer",
+    },
+    buttonDanger: {
+      variant: "links.buttonDanger",
+      cursor: "pointer",
     },
   },
   links: {
@@ -82,6 +82,14 @@ const theme: Theme = {
       borderColor: "primary",
       ":hover": {
         borderColor: "secondary",
+        backgroundColor: "secondary",
+      },
+    },
+    buttonAction: {
+      variant: "links.button",
+      backgroundColor: "primary",
+      color: "background",
+      ":hover": {
         backgroundColor: "secondary",
       },
     },
