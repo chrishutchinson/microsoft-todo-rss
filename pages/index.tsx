@@ -32,18 +32,26 @@ export default function Page() {
       <Flex
         sx={{
           flexDirection: ["column", "row"],
+          marginBottom: 4,
         }}
       >
         <Box variant="layout.centered">
           <Text as="p">From this...</Text>
 
-          <Image src="/to-do-list.png" />
+          <Image width={440} src="/to-do-list.png" />
         </Box>
 
         <Box variant="layout.centered">
           <Text as="p">To this...</Text>
 
-          <Image src="/to-do-list.png" />
+          <Image
+            width={360}
+            src="/rss-feed.png"
+            sx={{
+              marginTop: 26,
+              boxShadow: "0 0 20px 0 #cacaca",
+            }}
+          />
         </Box>
       </Flex>
     </Container>

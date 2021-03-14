@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@microsoft/microsoft-graph-client": "^2.2.1",
+    "@panelbear/panelbear-js": "^1.2.0",
     "next": "10.0.7",
     "next-auth": "^3.11.2",
     "next-auth-dynamodb": "^0.3.3",
