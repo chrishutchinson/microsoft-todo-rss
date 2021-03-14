@@ -7,8 +7,7 @@ import { buildFeedUrl } from "../../../../utils/build-feed-url";
 import config from "../../../../utils/config";
 
 const convertTaskToRssItem = async (
-  task: MicrosoftTodoTask,
-  listId: string
+  task: MicrosoftTodoTask
 ): Promise<string | null> => {
   const { error, result } = await ogs({
     url: task.title,
@@ -19,7 +18,7 @@ const convertTaskToRssItem = async (
   }
 
   return `<item>
-    <guid>${(result as any).ogUrl || (result as any).requestUrl}</guid>
+    <guid>${config.baseDomain}/api/task/${task.id}</guid>
     <title>${(result as any).ogTitle}</title>
     <link>${(result as any).ogUrl || (result as any).requestUrl}</link>
     <pubDate>${new Date(task.createdDateTime).toUTCString()}</pubDate>
@@ -49,9 +48,11 @@ const Handler: NextApiHandler = async (request, response) => {
 
     const taskItems = (
       await Promise.all(
-        tasks.map((task) => {
-          return convertTaskToRssItem(task, listId);
-        })
+        tasks
+          .filter((t) => !t.completedDateTime)
+          .map((task) => {
+            return convertTaskToRssItem(task);
+          })
       )
     ).filter(Boolean);
 
@@ -61,7 +62,7 @@ const Handler: NextApiHandler = async (request, response) => {
     response.send(`<?xml version="1.0" ?>
       <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
       <channel>
-        <title>${list.displayName}</title>
+        <title>${list.displayName} (via ${config.appTitle})</title>
         <link>${buildFeedUrl(
           {
             id: listId,
