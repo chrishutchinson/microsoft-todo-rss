@@ -1,24 +1,51 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# To Do × RSS
+
+> Create RSS feeds from your [Microsoft To Do](https://todo.microsoft.com/) lists
 
 ## Getting Started
 
-First, run the development server:
+1. Install the dependencies:
 
 ```bash
-npm run dev
-# or
+yarn
+```
+
+2. Copy `.env.example` to `.env.local` and complete.
+
+3. Run the development server:
+
+```bash
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Environment variables
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+| Variable                     | Description                                                                                                                               |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| NEXT_PUBLIC_APP_URL          | The base URL of your app with scheme, e.g. http://localhost:3000                                                                          |
+| NEXTAUTH_URL                 | The base URL of your app with scheme, e.g. http://localhost:3000                                                                          |
+| TODO_JWT_SIGNING_PRIVATE_KEY | JWT signing key, see [here](https://next-auth.js.org/warnings#jwt_auto_generated_signing_key) for docs on how to generate this            |
+| TODO_AWS_ACCESS_KEY_ID       | The AWS access key that can access the app's DynamoDB tables                                                                              |
+| TODO_AWS_SECRET_ACCESS_KEY   | The AWS secret key that can access the app's DynamoDB tables                                                                              |
+| TODO_AWS_DEFAULT_REGION      | The AWS region where app's DynamoDB tables live                                                                                           |
+| TODO_AWS_REGION              | The AWS region where app's DynamoDB tables live                                                                                           |
+| OMANYD_AWS_ACCESS_KEY_ID     | Same as `TODO_AWS_ACCESS_KEY_ID`                                                                                                          |
+| OMANYD_AWS_SECRET_ACCESS_KEY | Same as `TODO_AWS_SECRET_ACCESS_KEY`                                                                                                      |
+| OMANYD_AWS_REGION            | Same as `TODO_AWS_REGION`                                                                                                                 |
+| MSAL_CLIENT_ID               | Client ID from the Microsoft Azure app portal                                                                                             |
+| MSAL_CLIENT_SECRET           | Client secret from the Microsoft Azure app portal                                                                                         |
+| MSAL_ACCESS_URL              | Access token URL for MSAL                                                                                                                 |
+| MSAL_AUTHORIZATION_URL       | Authorization URL for MSAL                                                                                                                |
+| MSAL_REQUEST_URL             | Request token URL for MSAL                                                                                                                |
+| MSAL_SCOPES                  | Scopes to request from Microsoft, should be `offline_access https://graph.microsoft.com/user.read https://graph.microsoft.com/tasks.read` |
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Deployment
 
-## Learn More
+The app is automatically deployed to Vercel preview environments when a PR is opened, and to Vercel production when they are merged into the `main` branch.
+
+## About Next.js
 
 To learn more about Next.js, take a look at the following resources:
 
@@ -26,9 +53,3 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
