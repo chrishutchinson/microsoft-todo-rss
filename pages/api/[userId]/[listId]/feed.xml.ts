@@ -1,8 +1,29 @@
 import { NextApiHandler } from "next";
+import ogs from "open-graph-scraper";
 
 import { getFeed } from "../../../../utils/api/feeds";
 import { createMicrosoftGraphClient } from "../../../../utils/api/microsoft-graph";
 import config from "../../../../utils/config";
+
+const convertTaskToRssItem = async (
+  task: MicrosoftTodoTask,
+  listId: string
+): Promise<string | null> => {
+  const { error, result } = await ogs({
+    url: task.title,
+  });
+
+  if (error) {
+    return null;
+  }
+
+  return `<item>
+    <guid>${config.baseDomain}/api/${listId}/${task.id}</guid>
+    <title>${(result as any).ogTitle}</title>
+    <link>${(result as any).ogUrl}</link>
+    <pubDate>${new Date(task.createdDateTime).toUTCString()}</pubDate>
+  </item>`;
+};
 
 const Handler: NextApiHandler = async (request, response) => {
   try {
@@ -25,6 +46,12 @@ const Handler: NextApiHandler = async (request, response) => {
       `/me/todo/lists/${feed.id}/tasks`
     );
 
+    const taskItems = await Promise.all(
+      tasks.map((task) => {
+        return convertTaskToRssItem(task, listId);
+      })
+    );
+
     response.statusCode = 200;
     response.setHeader("Content-Type", "application/rss+xml");
 
@@ -39,16 +66,7 @@ const Handler: NextApiHandler = async (request, response) => {
         <atom:link href="${
           config.baseDomain
         }/api/${listId}/feed.xml" rel="self" type="application/rss+xml" />
-        ${tasks
-          .map((task) => {
-            return `<item>
-              <guid>${config.baseDomain}/api/${listId}/${task.id}</guid>
-              <title>${task.title}</title>
-              <link>${task.title}</link>
-              <pubDate>${new Date(task.createdDateTime).toUTCString()}</pubDate>
-            </item>`;
-          })
-          .join("\n")}
+        ${taskItems.join("\n")}
       </channel>
       </rss>`);
   } catch (e) {
