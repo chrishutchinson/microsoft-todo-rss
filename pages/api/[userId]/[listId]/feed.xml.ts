@@ -3,6 +3,7 @@ import ogs from "open-graph-scraper";
 
 import { getFeed } from "../../../../utils/api/feeds";
 import { createMicrosoftGraphClient } from "../../../../utils/api/microsoft-graph";
+import { buildFeedUrl } from "../../../../utils/build-feed-url";
 import config from "../../../../utils/config";
 
 const convertTaskToRssItem = async (
@@ -59,13 +60,23 @@ const Handler: NextApiHandler = async (request, response) => {
       <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
       <channel>
         <title>${list.displayName}</title>
-        <link>${config.baseDomain}/api/${listId}/feed.xml</link>
+        <link>${buildFeedUrl(
+          {
+            id: listId,
+            userId,
+          },
+          { relative: false }
+        )}</link>
         <description>${
           list.displayName
         } – Microsoft To Do RSS feed generator</description>
-        <atom:link href="${
-          config.baseDomain
-        }/api/${listId}/feed.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="${buildFeedUrl(
+          {
+            id: listId,
+            userId,
+          },
+          { relative: false }
+        )}" rel="self" type="application/rss+xml" />
         ${taskItems.join("\n")}
       </channel>
       </rss>`);
