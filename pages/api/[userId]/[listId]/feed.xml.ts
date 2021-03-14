@@ -19,9 +19,9 @@ const convertTaskToRssItem = async (
   }
 
   return `<item>
-    <guid>${config.baseDomain}/api/${listId}/${task.id}</guid>
+    <guid>${(result as any).ogUrl || (result as any).requestUrl}</guid>
     <title>${(result as any).ogTitle}</title>
-    <link>${(result as any).ogUrl}</link>
+    <link>${(result as any).ogUrl || (result as any).requestUrl}</link>
     <pubDate>${new Date(task.createdDateTime).toUTCString()}</pubDate>
   </item>`;
 };
@@ -47,11 +47,13 @@ const Handler: NextApiHandler = async (request, response) => {
       `/me/todo/lists/${feed.id}/tasks`
     );
 
-    const taskItems = await Promise.all(
-      tasks.map((task) => {
-        return convertTaskToRssItem(task, listId);
-      })
-    );
+    const taskItems = (
+      await Promise.all(
+        tasks.map((task) => {
+          return convertTaskToRssItem(task, listId);
+        })
+      )
+    ).filter(Boolean);
 
     response.statusCode = 200;
     response.setHeader("Content-Type", "application/rss+xml");
