@@ -9,6 +9,7 @@ const getHeadingStyle = (fontSize: number | number[]) => ({
 });
 
 const theme: Theme = {
+  useColorSchemeMediaQuery: true,
   colors: {
     text: "#4D4847",
     background: "#F4FFF8",
@@ -17,12 +18,15 @@ const theme: Theme = {
     highlight: "#8BAAAD",
     buff: "#fff",
     alert: "#FEDCD8",
+    dropShadow: "#cacaca",
     modes: {
       dark: {
         text: "#F4FFF8",
         background: "#000F08",
         primary: "#F4FFF8",
         buff: "#333",
+        dropShadow: "#000",
+        secondary: "#8BAAAD",
       },
     },
   },
@@ -90,7 +94,8 @@ const theme: Theme = {
       backgroundColor: "primary",
       color: "background",
       ":hover": {
-        backgroundColor: "secondary",
+        backgroundColor: "buff",
+        color: "text",
       },
     },
     buttonDanger: {
@@ -99,6 +104,7 @@ const theme: Theme = {
       color: "text",
       ":hover": {
         backgroundColor: "buff",
+        color: "text",
       },
     },
     secondaryButton: {
