@@ -2,7 +2,7 @@ import Head from "next/head";
 import config from "../../utils/config";
 
 export const HeadTitle: React.FC<{ title?: string }> = ({ title }) => {
-  const titleString = `${title ? `${title} &bull; ` : ""}${config.appTitle}`;
+  const titleString = `${title ? `${title} • ` : ""}${config.appTitle}`;
 
   return (
     <Head>
