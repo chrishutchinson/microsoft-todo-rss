@@ -26,6 +26,7 @@ const theme: Theme = {
         primary: "#F4FFF8",
         buff: "#333",
         dropShadow: "#000",
+        secondary: "#8BAAAD",
       },
     },
   },
@@ -93,8 +94,8 @@ const theme: Theme = {
       backgroundColor: "primary",
       color: "background",
       ":hover": {
-        borderColor: "secondary",
-        backgroundColor: "secondary",
+        backgroundColor: "buff",
+        color: "text",
       },
     },
     buttonDanger: {
