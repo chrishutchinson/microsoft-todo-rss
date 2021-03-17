@@ -94,7 +94,6 @@ const Handler: NextApiHandler = async (request, response) => {
       </channel>
       </rss>`);
   } catch (e) {
-    console.log({ e });
     response.statusCode = convertErrorToStatusCode(e);
     response.end();
   }
