@@ -1,4 +1,5 @@
 import { dynamo } from "../dynamo-client";
+import { NotFoundError } from "../errors";
 
 export const getFeed = async (id: string, userId: string) => {
   const feed = await dynamo
@@ -11,11 +12,11 @@ export const getFeed = async (id: string, userId: string) => {
     .promise();
 
   if (!feed || !feed.Item) {
-    throw new Error("No feed found matching that feed ID");
+    throw new NotFoundError("No feed found matching that feed ID");
   }
 
   if (feed.Item.userId !== userId) {
-    throw new Error("No feed found matching that feed ID");
+    throw new NotFoundError("No feed found matching that feed ID");
   }
 
   return feed.Item;

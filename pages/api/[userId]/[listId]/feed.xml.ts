@@ -5,24 +5,34 @@ import { getFeed } from "../../../../utils/api/feeds";
 import { createMicrosoftGraphClient } from "../../../../utils/api/microsoft-graph";
 import { buildFeedUrl } from "../../../../utils/build-feed-url";
 import config from "../../../../utils/config";
+import { convertErrorToStatusCode } from "../../../../utils/errors";
 
 const convertTaskToRssItem = async (
   task: MicrosoftTodoTask
 ): Promise<string | null> => {
-  const { error, result } = await ogs({
-    url: task.title,
-  });
+  try {
+    const { error, result } = await ogs({
+      url: task.title,
+    });
 
-  if (error) {
-    return null;
+    if (error) {
+      return null;
+    }
+
+    return `<item>
+      <guid>${config.baseDomain}/api/task/${task.id}</guid>
+      <title>${(result as any).ogTitle}</title>
+      <link>${(result as any).ogUrl || (result as any).requestUrl}</link>
+      <pubDate>${new Date(task.createdDateTime).toUTCString()}</pubDate>
+    </item>`;
+  } catch (e) {
+    return `<item>
+      <guid>${config.baseDomain}/api/task/${task.id}</guid>
+      <title>Unable to parse To Do with ID ${task.id}</title>
+      <link>${config.baseDomain}/api/task/${task.id}</link>
+      <pubDate>${new Date(task.createdDateTime).toUTCString()}</pubDate>
+    </item>`;
   }
-
-  return `<item>
-    <guid>${config.baseDomain}/api/task/${task.id}</guid>
-    <title>${(result as any).ogTitle}</title>
-    <link>${(result as any).ogUrl || (result as any).requestUrl}</link>
-    <pubDate>${new Date(task.createdDateTime).toUTCString()}</pubDate>
-  </item>`;
 };
 
 const Handler: NextApiHandler = async (request, response) => {
@@ -84,7 +94,7 @@ const Handler: NextApiHandler = async (request, response) => {
       </channel>
       </rss>`);
   } catch (e) {
-    response.statusCode = 404;
+    response.statusCode = convertErrorToStatusCode(e);
     response.end();
   }
 };

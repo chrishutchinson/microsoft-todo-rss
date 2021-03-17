@@ -1,4 +1,5 @@
 import { dynamo } from "../dynamo-client";
+import { NotFoundError } from "../errors";
 
 export const getAccount = async (id: string, provider: "msal") => {
   const account = await dynamo
@@ -14,7 +15,7 @@ export const getAccount = async (id: string, provider: "msal") => {
     .promise();
 
   if (!account || account.Items.length === 0) {
-    throw new Error("No account found matching that user ID");
+    throw new NotFoundError("No account found matching that user ID");
   }
 
   return account.Items[0];
