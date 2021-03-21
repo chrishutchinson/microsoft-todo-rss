@@ -1,4 +1,4 @@
-import { Container, Text } from "theme-ui";
+import { Container, Link, Text } from "theme-ui";
 
 const Privacy = () => {
   return (
@@ -11,8 +11,8 @@ const Privacy = () => {
         respect your privacy and comply with any applicable law and regulation
         regarding any personal information we may collect about you, including
         across our website,{" "}
-        <a href="https://todo.hutch.tf">https://todo.hutch.tf</a>, and other
-        sites we own and operate.{" "}
+        <Link href="https://todo.hutch.tf">https://todo.hutch.tf</Link>, and
+        other sites we own and operate.{" "}
       </Text>
 
       <Text as="p" variant="paragraph">
@@ -315,7 +315,9 @@ const Privacy = () => {
       <Text as="p" variant="paragraph">
         Chris Hutchinson
         <br />
-        https://www.chrishutchinson.me{" "}
+        <Link href="https://www.chrishutchinson.me">
+          https://www.chrishutchinson.me
+        </Link>{" "}
       </Text>
     </Container>
   );
