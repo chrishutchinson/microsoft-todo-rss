@@ -143,6 +143,13 @@ const theme: Theme = {
     heading4: getHeadingStyle([3, 4]),
     heading5: getHeadingStyle([2, 3]),
     heading6: getHeadingStyle(2),
+    paragraph: {
+      color: "text",
+      fontSize: 2,
+      fontFamily: "body",
+      lineHeight: "body",
+      marginBottom: 3,
+    },
   },
   styles: {
     root: {
