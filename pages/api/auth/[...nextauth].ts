@@ -45,7 +45,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 
   return NextAuth(req, res, {
     jwt: {
-      signingKey: process.env.TODO_JWT_SIGNING_PRIVATE_KEY,
+      signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
     },
     callbacks: {
       session: async (session, token) => {
@@ -70,6 +70,6 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
         requestTokenUrl: process.env.MSAL_REQUEST_URL,
       }),
     ],
-    database: `postgres://${process.env.TODO_SUPABASE_DATABASE_USERNAME}:${process.env.TODO_SUPABASE_DATABASE_PASSWORD}@${process.env.TODO_SUPABASE_DATABASE_HOST}:5432/${process.env.TODO_SUPABASE_DATABASE_NAME}`,
+    database: `postgres://${process.env.SUPABASE_DATABASE_USERNAME}:${process.env.SUPABASE_DATABASE_PASSWORD}@${process.env.SUPABASE_DATABASE_HOST}:5432/${process.env.SUPABASE_DATABASE_NAME}`,
   });
 };

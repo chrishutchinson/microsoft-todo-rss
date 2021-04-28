@@ -22,23 +22,23 @@ yarn dev
 
 ## Environment variables
 
-| Variable                        | Description                                                                                                                               |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| NEXT_PUBLIC_APP_URL             | The base URL of your app with scheme, e.g. http://localhost:3000                                                                          |
-| NEXTAUTH_URL                    | The base URL of your app with scheme, e.g. http://localhost:3000                                                                          |
-| TODO_JWT_SIGNING_PRIVATE_KEY    | JWT signing key, see [here](https://next-auth.js.org/warnings#jwt_auto_generated_signing_key) for docs on how to generate this            |
-| TODO_SUPABASE_DATABASE_HOST     | Supabase database hostname                                                                                                                |
-| TODO_SUPABASE_DATABASE_NAME     | Supabase database name                                                                                                                    |
-| TODO_SUPABASE_DATABASE_USERNAME | Supabase database username                                                                                                                |
-| TODO_SUPABASE_DATABASE_PASSWORD | Supabase database password                                                                                                                |
-| TODO_SUPABASE_URL               | Supabase URL                                                                                                                              |
-| TODO_SUPABASE_KEY               | Supabase auth key                                                                                                                         |
-| MSAL_CLIENT_ID                  | Client ID from the Microsoft Azure app portal                                                                                             |
-| MSAL_CLIENT_SECRET              | Client secret from the Microsoft Azure app portal                                                                                         |
-| MSAL_ACCESS_URL                 | Access token URL for MSAL                                                                                                                 |
-| MSAL_AUTHORIZATION_URL          | Authorization URL for MSAL                                                                                                                |
-| MSAL_REQUEST_URL                | Request token URL for MSAL                                                                                                                |
-| MSAL_SCOPES                     | Scopes to request from Microsoft, should be `offline_access https://graph.microsoft.com/user.read https://graph.microsoft.com/tasks.read` |
+| Variable                   | Description                                                                                                                               |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| NEXT_PUBLIC_APP_URL        | The base URL of your app with scheme, e.g. http://localhost:3000                                                                          |
+| NEXTAUTH_URL               | The base URL of your app with scheme, e.g. http://localhost:3000                                                                          |
+| JWT_SIGNING_PRIVATE_KEY    | JWT signing key, see [here](https://next-auth.js.org/warnings#jwt_auto_generated_signing_key) for docs on how to generate this            |
+| SUPABASE_DATABASE_HOST     | Supabase database hostname                                                                                                                |
+| SUPABASE_DATABASE_NAME     | Supabase database name                                                                                                                    |
+| SUPABASE_DATABASE_USERNAME | Supabase database username                                                                                                                |
+| SUPABASE_DATABASE_PASSWORD | Supabase database password                                                                                                                |
+| SUPABASE_URL               | Supabase URL                                                                                                                              |
+| SUPABASE_KEY               | Supabase auth key                                                                                                                         |
+| MSAL_CLIENT_ID             | Client ID from the Microsoft Azure app portal                                                                                             |
+| MSAL_CLIENT_SECRET         | Client secret from the Microsoft Azure app portal                                                                                         |
+| MSAL_ACCESS_URL            | Access token URL for MSAL                                                                                                                 |
+| MSAL_AUTHORIZATION_URL     | Authorization URL for MSAL                                                                                                                |
+| MSAL_REQUEST_URL           | Request token URL for MSAL                                                                                                                |
+| MSAL_SCOPES                | Scopes to request from Microsoft, should be `offline_access https://graph.microsoft.com/user.read https://graph.microsoft.com/tasks.read` |
 
 ## Deployment
 
