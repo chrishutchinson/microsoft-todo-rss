@@ -1,5 +1,5 @@
-import { dynamo } from "../dynamo-client";
-import { NotFoundError } from "../errors";
+import { dynamo } from "../providers/dynamo";
+import { NotFoundError } from "../../utils/errors";
 
 export const getFeed = async (id: string, userId: string) => {
   const feed = await dynamo

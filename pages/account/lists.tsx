@@ -15,8 +15,6 @@ import { HeadTitle } from "../../components/HeadTitle/HeadTitle";
 import { RequireAuth } from "../../components/RequireAuth/RequireAuth";
 import { buildFeedUrl } from "../../utils/build-feed-url";
 
-import config from "../../utils/config";
-
 const fetcher = async (input: RequestInfo, init: RequestInit) => {
   const res = await fetch(input, init);
   return res.json();

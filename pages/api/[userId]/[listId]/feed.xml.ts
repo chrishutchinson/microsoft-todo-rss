@@ -1,7 +1,7 @@
 import { NextApiHandler } from "next";
 import ogs from "open-graph-scraper";
 
-import { getFeed } from "../../../../utils/api/feeds";
+import { getFeed } from "../../../../database/models/feeds";
 import { createMicrosoftGraphClient } from "../../../../utils/api/microsoft-graph";
 import { buildFeedUrl } from "../../../../utils/build-feed-url";
 import config from "../../../../utils/config";
