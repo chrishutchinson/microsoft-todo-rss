@@ -1,25 +1,31 @@
-import { dynamo } from "../providers/dynamo";
+import { supabase } from "../providers/supabase";
 
 import { NotFoundError } from "../../utils/errors";
 
-export const getAccount = async (id: string, provider: "msal") => {
-  const account = await dynamo
-    .query({
-      TableName: "accounts",
-      IndexName: "AccountUserProviderIndex",
-      KeyConditionExpression: "userId = :userId and providerId = :providerId",
-      ExpressionAttributeValues: {
-        ":userId": id,
-        ":providerId": provider,
-      },
-    })
-    .promise();
+type Account = {
+  user_id: string;
+  provider_id: string;
+  access_token: string;
+  refresh_token: string;
+  provider_account_id: string;
+};
 
-  if (!account || account.Items.length === 0) {
+export const getAccount = async (id: string, provider: "msal") => {
+  const { data, error } = await supabase
+    .from<Account>("accounts")
+    .select()
+    .eq("user_id", id)
+    .eq("provider_id", provider);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (data.length === 0) {
     throw new NotFoundError("No account found matching that user ID");
   }
 
-  return account.Items[0];
+  return data[0];
 };
 
 export const updateAccountTokens = async (
@@ -29,19 +35,12 @@ export const updateAccountTokens = async (
 ) => {
   const account = await getAccount(id, provider);
 
-  await dynamo.update({
-    TableName: "accounts",
-    Key: {
-      providerId: account.providerId,
-      providerAccountId: account.providerAccountId,
-    },
-    AttributeUpdates: {
-      accessToken: {
-        Value: tokens.accessToken,
-      },
-      refreshToken: {
-        Value: tokens.refreshToken,
-      },
-    },
-  });
+  await supabase
+    .from<Account>("accounts")
+    .update({
+      access_token: tokens.accessToken,
+      refresh_token: tokens.refreshToken,
+    })
+    .eq("provider_id", account.provider_id)
+    .eq("provider_account_id", account.provider_account_id);
 };

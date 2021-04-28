@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import NextAuth from "next-auth";
-import NextAuthDynamodb from "next-auth-dynamodb";
 
 const MicrosoftProvider = ({
   clientId,
@@ -71,6 +70,6 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
         requestTokenUrl: process.env.MSAL_REQUEST_URL,
       }),
     ],
-    adapter: NextAuthDynamodb,
+    database: `postgres://${process.env.TODO_SUPABASE_DATABASE_USERNAME}:${process.env.TODO_SUPABASE_DATABASE_PASSWORD}@${process.env.TODO_SUPABASE_DATABASE_HOST}:5432/${process.env.TODO_SUPABASE_DATABASE_NAME}`,
   });
 };

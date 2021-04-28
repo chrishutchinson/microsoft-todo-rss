@@ -1,25 +1,29 @@
-import { dynamo } from "../providers/dynamo";
+import { supabase } from "../providers/supabase";
+
 import { NotFoundError } from "../../utils/errors";
 
+type Feed = {
+  id: string;
+  user_id: string;
+};
+
 export const getFeed = async (id: string, userId: string) => {
-  const feed = await dynamo
-    .get({
-      TableName: "feeds",
-      Key: {
-        id,
-      },
-    })
-    .promise();
+  const { data, error } = await supabase
+    .from<Feed>("feeds")
+    .select()
+    .eq("id", id);
 
-  if (!feed || !feed.Item) {
+  if (error || data.length === 0) {
     throw new NotFoundError("No feed found matching that feed ID");
   }
 
-  if (feed.Item.userId !== userId) {
+  const feed = data[0];
+
+  if (feed.user_id !== userId) {
     throw new NotFoundError("No feed found matching that feed ID");
   }
 
-  return feed.Item;
+  return feed;
 };
 
 export const addFeed = async (id: string, userId: string) => {
@@ -28,18 +32,13 @@ export const addFeed = async (id: string, userId: string) => {
 
     return existingFeed;
   } catch (e) {
-    const feed = await dynamo
-      .put({
-        TableName: "feeds",
-        Item: {
-          id,
-          userId,
-        },
-      })
-      .promise();
+    const { error } = await supabase.from<Feed>("feeds").insert({
+      id,
+      user_id: userId,
+    });
 
-    if (!feed) {
-      throw new Error("Unable to add feed");
+    if (error) {
+      throw new Error(error.message);
     }
   }
 };
@@ -47,30 +46,18 @@ export const addFeed = async (id: string, userId: string) => {
 export const deleteFeed = async (id: string, userId: string) => {
   const existingFeed = await getFeed(id, userId);
 
-  await dynamo
-    .delete({
-      TableName: "feeds",
-      Key: {
-        id: existingFeed.id,
-      },
-    })
-    .promise();
+  await supabase.from<Feed>("feeds").delete().eq("id", existingFeed.id);
 };
 
 export const getFeeds = async (userId: string) => {
-  const feeds = await dynamo
-    .query({
-      TableName: "feeds",
-      IndexName: "UserFeedsIndex",
-      KeyConditionExpression: "#userId = :userId",
-      ExpressionAttributeNames: {
-        "#userId": "userId",
-      },
-      ExpressionAttributeValues: {
-        ":userId": userId,
-      },
-    })
-    .promise();
+  const { data, error } = await supabase
+    .from<Feed>("feeds")
+    .select()
+    .eq("user_id", userId);
 
-  return feeds.Items;
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
 };
