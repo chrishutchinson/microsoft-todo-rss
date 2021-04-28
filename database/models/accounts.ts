@@ -2,7 +2,7 @@ import { supabase } from "../providers/supabase";
 
 import { NotFoundError } from "../../utils/errors";
 
-type Account = {
+type SupabaseAccount = {
   user_id: string;
   provider_id: string;
   access_token: string;
@@ -10,9 +10,29 @@ type Account = {
   provider_account_id: string;
 };
 
+type Account = {
+  userId: string;
+  providerId: string;
+  accessToken: string;
+  refreshToken: string;
+  providerAccountId: string;
+};
+
+const convertSupabaseAccountToAccount = (
+  supabaseAccount: SupabaseAccount
+): Account => {
+  return {
+    userId: supabaseAccount.user_id,
+    providerId: supabaseAccount.provider_id,
+    accessToken: supabaseAccount.access_token,
+    refreshToken: supabaseAccount.refresh_token,
+    providerAccountId: supabaseAccount.provider_account_id,
+  };
+};
+
 export const getAccount = async (id: string, provider: "msal") => {
   const { data, error } = await supabase
-    .from<Account>("accounts")
+    .from<SupabaseAccount>("accounts")
     .select()
     .eq("user_id", id)
     .eq("provider_id", provider);
@@ -25,7 +45,7 @@ export const getAccount = async (id: string, provider: "msal") => {
     throw new NotFoundError("No account found matching that user ID");
   }
 
-  return data[0];
+  return convertSupabaseAccountToAccount(data[0]);
 };
 
 export const updateAccountTokens = async (
@@ -36,11 +56,11 @@ export const updateAccountTokens = async (
   const account = await getAccount(id, provider);
 
   await supabase
-    .from<Account>("accounts")
+    .from<SupabaseAccount>("accounts")
     .update({
       access_token: tokens.accessToken,
       refresh_token: tokens.refreshToken,
     })
-    .eq("provider_id", account.provider_id)
-    .eq("provider_account_id", account.provider_account_id);
+    .eq("provider_id", account.providerId)
+    .eq("provider_account_id", account.providerAccountId);
 };
