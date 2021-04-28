@@ -1,7 +1,7 @@
 import { NextApiHandler } from "next";
 import { getSession } from "next-auth/client";
 
-import { addFeed, deleteFeed } from "../../utils/api/feeds";
+import { addFeed, deleteFeed } from "../../database/models/feeds";
 import { createMicrosoftGraphClient } from "../../utils/api/microsoft-graph";
 import { requireAuth } from "../../utils/require-auth";
 

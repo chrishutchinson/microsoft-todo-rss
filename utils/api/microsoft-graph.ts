@@ -1,6 +1,9 @@
 import { Client } from "@microsoft/microsoft-graph-client";
 
-import { getAccount, updateAccountTokens } from "./accounts";
+import {
+  getAccount,
+  updateAccountTokens,
+} from "../../database/models/accounts";
 
 export const createMicrosoftGraphClient = (userId?: string) => {
   if (!userId) {

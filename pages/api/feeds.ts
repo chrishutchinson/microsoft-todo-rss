@@ -1,7 +1,7 @@
 import { NextApiHandler } from "next";
 import { getSession } from "next-auth/client";
 
-import { getFeeds } from "../../utils/api/feeds";
+import { getFeeds } from "../../database/models/feeds";
 import { requireAuth } from "../../utils/require-auth";
 
 const Handler: NextApiHandler = async (request, response) => {
