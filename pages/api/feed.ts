@@ -6,13 +6,13 @@ import { createMicrosoftGraphClient } from "../../utils/api/microsoft-graph";
 import { requireAuth } from "../../utils/require-auth";
 
 const Handler: NextApiHandler = async (request, response) => {
-  if (!["POST", "DELETE"].includes(request.method)) {
+  if (!["POST", "DELETE"].includes(request.method || "")) {
     response.statusCode = 404;
     response.end();
     return;
   }
 
-  const { user } = await getSession({ req: request });
+  const { user = null } = await getSession({ req: request });
 
   const { listId } = request.method === "POST" ? request.body : request.query;
 
@@ -36,7 +36,7 @@ const Handler: NextApiHandler = async (request, response) => {
     await addFeed(list.id, (user as any).id);
 
     response.json({
-      id: list.id,
+      listId: list.id,
       userId: (user as any).id,
     });
     return;

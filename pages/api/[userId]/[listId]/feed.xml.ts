@@ -50,10 +50,10 @@ const Handler: NextApiHandler = async (request, response) => {
     const { makeRequest } = createMicrosoftGraphClient(userId);
 
     const list = await makeRequest<MicrosoftTodoList>(
-      `/me/todo/lists/${feed.id}`
+      `/me/todo/lists/${feed.listId}`
     );
     const { value: tasks } = await makeRequest<{ value: MicrosoftTodoTask[] }>(
-      `/me/todo/lists/${feed.id}/tasks`
+      `/me/todo/lists/${feed.listId}/tasks`
     );
 
     const taskItems = (
@@ -75,17 +75,17 @@ const Handler: NextApiHandler = async (request, response) => {
         <title>${list.displayName} (via ${config.appTitle})</title>
         <link>${buildFeedUrl(
           {
-            id: listId,
+            listId,
             userId,
           },
           { relative: false }
         )}</link>
-        <description>${
+        <description>RSS feed for the Microsoft To Do list '${
           list.displayName
-        } – Microsoft To Do RSS feed generator</description>
+        }'</description>
         <atom:link href="${buildFeedUrl(
           {
-            id: listId,
+            listId,
             userId,
           },
           { relative: false }
