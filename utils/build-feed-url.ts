@@ -1,12 +1,13 @@
 import config from "./config";
+import { Feed } from "../database/models/feeds";
 
 export const buildFeedUrl = (
-  feed: { id: string; userId: string },
+  feed: Pick<Feed, "listId" | "userId">,
   options?: {
     relative?: boolean;
   }
 ) => {
   return `${options?.relative ? "" : config.baseDomain}/api/${feed.userId}/${
-    feed.id
+    feed.listId
   }/feed.xml`;
 };

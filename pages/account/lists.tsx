@@ -13,6 +13,7 @@ import {
 } from "theme-ui";
 import { HeadTitle } from "../../components/HeadTitle/HeadTitle";
 import { RequireAuth } from "../../components/RequireAuth/RequireAuth";
+import { Feed } from "../../database/models/feeds";
 import { buildFeedUrl } from "../../utils/build-feed-url";
 
 const fetcher = async (input: RequestInfo, init: RequestInit) => {
@@ -176,8 +177,14 @@ const List: React.FC<{ list: any; feed?: any }> = ({ list, feed }) => {
 };
 
 const Lists: React.FC = () => {
-  const { data: feedsData, error: feedsError } = useSWR("/api/feeds", fetcher);
-  const { data: listsData, error: listsError } = useSWR("/api/lists", fetcher);
+  const { data: feedsData, error: feedsError } = useSWR<Feed[]>(
+    "/api/feeds",
+    fetcher
+  );
+  const { data: listsData, error: listsError } = useSWR<MicrosoftTodoList[]>(
+    "/api/lists",
+    fetcher
+  );
 
   return (
     <>
@@ -212,14 +219,14 @@ const Lists: React.FC = () => {
           </Box>
         )}
 
-        {listsData && (
+        {feedsData && listsData && (
           <Box
             sx={{
               marginBottom: 4,
             }}
           >
             {listsData.map((list) => {
-              const feedForList = feedsData.find((f) => f.id === list.id);
+              const feedForList = feedsData.find((f) => f.listId === list.id);
 
               return <List key={list.id} list={list} feed={feedForList} />;
             })}

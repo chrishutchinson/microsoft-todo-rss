@@ -1,76 +1,90 @@
-import { dynamo } from "../providers/dynamo";
+import { supabase } from "../providers/supabase";
+
 import { NotFoundError } from "../../utils/errors";
 
-export const getFeed = async (id: string, userId: string) => {
-  const feed = await dynamo
-    .get({
-      TableName: "feeds",
-      Key: {
-        id,
-      },
-    })
-    .promise();
-
-  if (!feed || !feed.Item) {
-    throw new NotFoundError("No feed found matching that feed ID");
-  }
-
-  if (feed.Item.userId !== userId) {
-    throw new NotFoundError("No feed found matching that feed ID");
-  }
-
-  return feed.Item;
+type SupabaseFeed = {
+  id: string;
+  list_id: string;
+  user_id: number;
 };
 
-export const addFeed = async (id: string, userId: string) => {
+export type Feed = {
+  id: string;
+  listId: string;
+  userId: string;
+};
+
+const convertSupabaseFeedToFeed = (supabaseFeed: SupabaseFeed): Feed => {
+  return {
+    id: supabaseFeed.id,
+    listId: supabaseFeed.list_id,
+    userId: supabaseFeed.user_id.toString(),
+  };
+};
+
+export const getFeed = async (listId: string, userId: string) => {
+  const { data, error } = await supabase
+    .from<SupabaseFeed>("feeds")
+    .select()
+    .eq("list_id", listId)
+    .eq("user_id", userId);
+
+  if (error || !data || data.length === 0) {
+    throw new NotFoundError("No feed found matching that feed ID");
+  }
+
+  const feed = convertSupabaseFeedToFeed(data[0]);
+
+  if (feed.userId !== userId) {
+    throw new NotFoundError("No feed found matching that feed ID");
+  }
+
+  return feed;
+};
+
+export const addFeed = async (listId: string, userId: string) => {
   try {
-    const existingFeed = await getFeed(id, userId);
+    const existingFeed = await getFeed(listId, userId);
 
     return existingFeed;
   } catch (e) {
-    const feed = await dynamo
-      .put({
-        TableName: "feeds",
-        Item: {
-          id,
-          userId,
-        },
-      })
-      .promise();
+    if (e instanceof NotFoundError) {
+      const { data, error } = await supabase
+        .from<SupabaseFeed>("feeds")
+        .insert({
+          list_id: listId,
+          user_id: parseInt(userId),
+        });
 
-    if (!feed) {
-      throw new Error("Unable to add feed");
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return convertSupabaseFeedToFeed(data[0]);
     }
+
+    throw e;
   }
 };
 
-export const deleteFeed = async (id: string, userId: string) => {
-  const existingFeed = await getFeed(id, userId);
+export const deleteFeed = async (listId: string, userId: string) => {
+  const existingFeed = await getFeed(listId, userId);
 
-  await dynamo
-    .delete({
-      TableName: "feeds",
-      Key: {
-        id: existingFeed.id,
-      },
-    })
-    .promise();
+  await supabase
+    .from<SupabaseFeed>("feeds")
+    .delete()
+    .eq("list_id", existingFeed.listId);
 };
 
 export const getFeeds = async (userId: string) => {
-  const feeds = await dynamo
-    .query({
-      TableName: "feeds",
-      IndexName: "UserFeedsIndex",
-      KeyConditionExpression: "#userId = :userId",
-      ExpressionAttributeNames: {
-        "#userId": "userId",
-      },
-      ExpressionAttributeValues: {
-        ":userId": userId,
-      },
-    })
-    .promise();
+  const { data, error } = await supabase
+    .from<SupabaseFeed>("feeds")
+    .select()
+    .eq("user_id", userId.toString());
 
-  return feeds.Items;
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data.map((f) => convertSupabaseFeedToFeed(f));
 };
